@@ -1,11 +1,10 @@
 import type { ClientsConfig, ServiceContext, RecorderState } from '@vtex/api'
 import { LRUCache, method, Service } from '@vtex/api'
-
 import { Clients } from './clients'
-import { status } from './middlewares/status'
-import { validate } from './middlewares/validate'
+import { getDatabase } from './middlewares/database'
+const { MongoClient } = require('mongodb')
 
-const TIMEOUT_MS = 800
+const TIMEOUT_MS = 20000
 
 // Create a LRU memory cache for the Status client.
 // The 'max' parameter sets the size of the cache.
@@ -16,6 +15,9 @@ const TIMEOUT_MS = 800
 const memoryCache = new LRUCache<string, any>({ max: 5000 })
 
 metrics.trackCache('status', memoryCache)
+
+export const mongoClient = new MongoClient('')
+mongoClient.connect()
 
 // This is the configuration for clients available in `ctx.clients`.
 const clients: ClientsConfig<Clients> = {
@@ -49,8 +51,8 @@ export default new Service({
   clients,
   routes: {
     // `status` is the route ID from service.json. It maps to an array of middlewares (or a single handler).
-    status: method({
-      GET: [validate, status],
+    mongo: method({
+      GET: [getDatabase]
     }),
   },
 })
