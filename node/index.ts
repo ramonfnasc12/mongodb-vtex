@@ -16,8 +16,8 @@ const memoryCache = new LRUCache<string, any>({ max: 5000 })
 
 metrics.trackCache('status', memoryCache)
 
-export const mongoClient = new MongoClient('')
-mongoClient.connect()
+export const mongoClient = new MongoClient('mongodb+srv://main_user:AHCVFZc09EiRGvPa@cluster0.5lfjn.mongodb.net/')
+//mongoClient.connect()
 
 // This is the configuration for clients available in `ctx.clients`.
 const clients: ClientsConfig<Clients> = {
